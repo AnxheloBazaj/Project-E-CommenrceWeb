@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+
+    <style>
+        .work-sans {
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        .sidebar {
+            height: 100vh;
+        }
+
+        .main-content {
+            transition: margin-left 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                height: 100%;
+                z-index: 1000;
+                transition: left 0.6s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <div class="flex flex-no-wrap">
+        <!-- Sidebar -->
+        <div class="w-64 sidebar bg-black text-white p-4">
+            <h2 class="text-xl font-bold mb-4">Admin Dashboard</h2>
+            <ul class="space-y-2">
+                <li><a href="/" class="block py-2.5 px-4 rounded hover:bg-gray-900">Home</a></li>
+                <li><a href="/admin/panel" class="block py-2.5 px-4 rounded hover:bg-gray-500">Dashboard</a></li>
+                <li><a href="/all/products" class="block py-2.5 px-4 rounded hover:bg-gray-900">Products</a></li>
+                <li><a href="#" class="block py-2.5 px-4 rounded  hover:bg-gray-900">Orders</a></li>
+                <li><a href="/all/users" class="block py-2.5 px-4 rounded hover:bg-gray-900">Users</a></li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content flex-1 p-10">
+            <header class="flex justify-between items-center mb-10">
+                <h1 class="text-2xl font-bold">Users</h1>
+                <div>
+                    <button id="menu-button" class="text-gray-600 hover:text-gray-900 lg:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            <div class="mt-10">
+                <h2 class="text-xl font-bold mb-4">All Users</h2>
+                {% with messages = get_flashed_messages(category_filter=["deleteUser"]) %}
+                {% if messages %}
+            
+                {% for message in messages %}
+                <p class="text-red-600">{{message}}</p>
+                {%endfor%}
+                {%endif%}
+                {%endwith%}
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b-2 border-gray-200">First Name</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-200">Last Name</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-200">E-mail</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-200">Role</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-200">Member Since</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-200">Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%if users%}
+                            {%for user in users %}
+                            <tr>
+                                <td class="py-2 px-4 border-b border-gray-200">{{user.first_name}}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{user.last_name}}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{user.email}}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{user.role}}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{user.created_at}} </td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{user.updated_at}}</td>
+                            </tr>
+                            {%endfor%}
+
+            {%else%}
+            <p class="text-red-600">No users Yet</p>
+            {%endif%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('menu-button').onclick = function () {
+            document.querySelector('.sidebar').classList.toggle('open');
+        };
+    </script>
+
+</body>
+
+</html>

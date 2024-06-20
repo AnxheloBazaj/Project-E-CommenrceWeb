@@ -48,7 +48,7 @@ class Product:
 
     @classmethod
     def update_product(cls, data):
-        query = "UPDATE products SET description = %(description)s, price=%(price)s, stock_quantity = %(stock_quantity)s, image = %(image)s  WHERE id = %(id)s;"
+        query = "UPDATE products SET description = %(description)s, price=%(price)s, stock_quantity = %(stock_quantity)s  WHERE id = %(id)s;"
         return connectToMySQL(cls.db_name).query_db(query, data)
 
     @classmethod

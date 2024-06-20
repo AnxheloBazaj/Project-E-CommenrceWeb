@@ -12,8 +12,8 @@ def dashboard():
     if "user_id" in session:
         data = {"id": session["user_id"]}
         loggeduser = User.get_user_by_id(data)
-        return render_template("dashboard.html", loggeduser=loggeduser, allproducts=Product.get_all_Products())
-    return render_template("dashboard.html",allproducts=Product.get_all_Products())
+        return render_template("Home.html", loggeduser=loggeduser, allproducts=Product.get_all_Products())
+    return render_template("Home.html",allproducts=Product.get_all_Products())
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -65,10 +65,12 @@ def admin():
     data = {"id": session["user_id"]}
     loggeduser = User.get_user_by_id(data)
     if loggeduser["role"] == "admin":
-
         return render_template(
             "adminPanel.html", loggeduser=loggeduser, allusers=User.get_all(), allproducts=Product.get_all_Products(), categories=Product.getCategories()
         )
+        # return render_template(
+        #     "adminPanel1.html", loggeduser=loggeduser, allusers=User.get_all(), allproducts=Product.get_all_Products(), categories=Product.getCategories()
+        # )
     return redirect(request.referrer)
 
 
@@ -84,9 +86,22 @@ def delete(id):
         flash("User Deleted.", "deleteUser")
         if loggeduser["id"] == id:
             session.clear()
-        return redirect("/")
-    return redirect("/")
+            return redirect("/")
+    return redirect("/all/users")
 
+
+@app.route('/all/users/')
+def userss():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    data = {"id": session["user_id"]}
+    loggeduser = User.get_user_by_id(data)
+
+    if loggeduser["role"] != "admin":
+        return redirect("/")
+    if loggeduser["role"] == "admin":
+        return render_template('Users.html',users=User.get_all())
 
 @app.route("/logout")
 def logout():
